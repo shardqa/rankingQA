@@ -10,7 +10,8 @@
     "type-check": "tsc --noEmit",
     "scrape": "tsx scripts/scraper/run-scraper.ts",
     "scrape:schedule": "tsx scripts/scraper/scheduler.ts",
-    "scrape:test": "tsx scripts/scraper/test-scraper.ts"
+    "scrape:test": "tsx scripts/scraper/test-scraper.ts",
+    "convert:csv": "tsx scripts/utils/csv-to-json.ts"
   },
   "dependencies": {
     "lucide-react": "^0.441.0",

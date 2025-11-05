@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 General Discussion
+    url: https://github.com/yourusername/qa-influencers-ranking/discussions
+    about: Ask questions or discuss ideas about the project
+  - name: 🐛 Report a Bug
+    url: https://github.com/yourusername/qa-influencers-ranking/issues/new
+    about: Report a technical issue with the website
+  - name: 💡 Feature Request
+    url: https://github.com/yourusername/qa-influencers-ranking/issues/new
+    about: Suggest a new feature or enhancement
