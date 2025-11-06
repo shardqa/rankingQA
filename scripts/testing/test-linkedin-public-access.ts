@@ -211,9 +211,24 @@ async function testLinkedInPublicAccess() {
       if (!found) {
         console.log('   ❌ NOT FOUND: Follower count not visible in HTML');
 
-        // Show a sample of the HTML for debugging
-        const sample = html.substring(0, 500).replace(/\s+/g, ' ');
-        console.log('   → HTML sample:', sample.substring(0, 200) + '...');
+        // Save HTML to file for debugging
+        const fs = require('fs');
+        const filename = `debug-${profile.mockKey}-${Date.now()}.html`;
+        fs.writeFileSync(filename, html);
+        console.log(`   → Full HTML saved to: ${filename}`);
+
+        // Show a larger sample of the HTML for debugging
+        const sample = html.substring(0, 3000).replace(/\s+/g, ' ');
+        console.log('   → HTML sample (first 500 chars):', sample.substring(0, 500) + '...');
+
+        // Try to find any text that might contain follower info
+        const followerSearch = html.match(/.{0,100}(follower|seguidor).{0,100}/gi);
+        if (followerSearch && followerSearch.length > 0) {
+          console.log('   → Found mentions of "follower" in HTML:');
+          followerSearch.slice(0, 5).forEach((match, i) => {
+            console.log(`      ${i + 1}. ${match.substring(0, 150)}`);
+          });
+        }
 
         // Check if we can at least see the profile name
         const nameMatch = html.match(/<title>(.*?)<\/title>/i);
