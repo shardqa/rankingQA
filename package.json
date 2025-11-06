@@ -14,7 +14,8 @@
     "convert:csv": "tsx scripts/utils/csv-to-json.ts",
     "monitor:init": "tsx scripts/monitoring/initialize.ts",
     "monitor:weekly": "tsx scripts/monitoring/weekly-update.ts",
-    "monitor:schedule": "tsx scripts/monitoring/scheduler.ts"
+    "monitor:schedule": "tsx scripts/monitoring/scheduler.ts",
+    "test:linkedin": "tsx scripts/testing/test-linkedin-public-access.ts"
   },
   "dependencies": {
     "lucide-react": "^0.441.0",
