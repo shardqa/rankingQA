@@ -11,7 +11,10 @@
     "scrape": "tsx scripts/scraper/run-scraper.ts",
     "scrape:schedule": "tsx scripts/scraper/scheduler.ts",
     "scrape:test": "tsx scripts/scraper/test-scraper.ts",
-    "convert:csv": "tsx scripts/utils/csv-to-json.ts"
+    "convert:csv": "tsx scripts/utils/csv-to-json.ts",
+    "monitor:init": "tsx scripts/monitoring/initialize.ts",
+    "monitor:weekly": "tsx scripts/monitoring/weekly-update.ts",
+    "monitor:schedule": "tsx scripts/monitoring/scheduler.ts"
   },
   "dependencies": {
     "lucide-react": "^0.441.0",
