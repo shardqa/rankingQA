@@ -36,3 +36,4 @@ next-env.d.ts
 # Scraper logs and data
 /logs
 /data/snapshots
+AGENTS.md
