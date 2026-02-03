@@ -46,7 +46,7 @@ export default async function HomePage() {
 
           <div className="card p-6 text-center">
             <div className="text-4xl font-bold text-primary-600 mb-2">
-              {rankedProfessionals.reduce((sum, p) => sum + p.followers, 0).toLocaleString()}
+              {rankedProfessionals.reduce((sum, p) => sum + p.followers, 0).toLocaleString('en-US')}
             </div>
             <div className="text-sm text-slate-600">Total Followers</div>
           </div>

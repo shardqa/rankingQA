@@ -28,3 +28,7 @@ Campos por perfil:
 - Seguidores nao representam qualidade tecnica.
 - Dados podem ficar desatualizados entre snapshots.
 - Scraping pode falhar por bloqueios do LinkedIn.
+
+## Fonta de dados
+- O ranking é armazenado no Supabase em `ranking_history.data` (JSONB).
+- Atualização inicial é feita via scripts locais; automação é futura.

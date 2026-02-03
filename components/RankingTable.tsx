@@ -104,7 +104,7 @@ export default function RankingTable({ professionals }: RankingTableProps) {
                     {formatFollowerCount(professional.followers)}
                   </div>
                   <div className="text-xs text-slate-500">
-                    {professional.followers.toLocaleString()}
+                    {professional.followers.toLocaleString('en-US')}
                   </div>
                 </td>
 

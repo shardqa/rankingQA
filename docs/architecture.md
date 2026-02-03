@@ -21,3 +21,8 @@
 ## Jobs / cron / filas
 - Opcional: `npm run scrape:schedule` ou `npm run monitor:schedule`.
 - Recomendado apenas se politica de dados permitir.
+
+## Infra e Deploy
+- Vercel hospeda o Next.js (frontend).
+- Supabase fornece banco/API para o ranking (JSONB único).
+- A aplicação lê dados via REST API do Supabase com chave `anon`.

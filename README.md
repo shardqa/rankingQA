@@ -21,6 +21,11 @@ npm install
 npm run build
 npm run start
 ```
+## Deploy e Dados (Supabase + Vercel)
+- Frontend publicado na Vercel.
+- Dados do ranking vêm do Supabase (tabela `ranking_history`, coluna JSONB `data`).
+- Leitura pública via RLS + policy de SELECT para 'anon'.
+- Variáveis obrigatórias: 'NEXT_PUBLIC_SUPABASE_URL' e 'NEXT_PUBLIC_SUPABASE_ANON_KEY'.
 
 ## Variaveis de ambiente
 Opcional:
