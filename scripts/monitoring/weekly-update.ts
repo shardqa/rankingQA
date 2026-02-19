@@ -16,11 +16,15 @@
  * - Respects rate limits
  */
 
-import { LinkedInScraper } from '../scraper/linkedin-scraper';
-import { SEED_PROFILES, getEnabledProfiles } from '../scraper/seed-profiles';
-import { ScrapingResult, ScrapedProfile } from '../scraper/types';
-import { log, error as logError, warn } from '../scraper/logger';
-import { saveSnapshot, updateMainDataFile, getLatestSnapshot } from '../scraper/data-storage';
+import { LinkedInScraper } from "../scraper/linkedin-scraper";
+import { SEED_PROFILES, getEnabledProfiles } from "../scraper/seed-profiles";
+import { ScrapingResult, ScrapedProfile } from "../scraper/types";
+import { log, error as logError, warn } from "../scraper/logger";
+import {
+  saveSnapshot,
+  updateMainDataFile,
+  getLatestSnapshot,
+} from "../scraper/data-storage";
 
 /**
  * Weekly monitoring configuration
@@ -39,34 +43,41 @@ const WEEKLY_CONFIG = {
   minChangeThreshold: 100, // Only report changes > 100 followers
 };
 
-/**
- * Run weekly monitoring
- */
 async function runWeeklyMonitoring(): Promise<void> {
   const startTime = Date.now();
 
-  log('='.repeat(70));
-  log('🔄 WEEKLY MONITORING - Automatic Profile Update');
-  log('='.repeat(70));
+  log("=".repeat(70));
+  log("🔄 WEEKLY MONITORING - Automatic Profile Update");
+  log("=".repeat(70));
   log(`Started: ${new Date().toISOString()}`);
-  log('');
+  log("");
 
-  // Get profiles to monitor
   const profiles = getEnabledProfiles();
 
   log(`📊 Profiles to monitor: ${profiles.length}`);
-  log(`⏱️  Estimated duration: ~${Math.ceil((profiles.length * WEEKLY_CONFIG.delayBetweenProfiles) / 60000)} minutes`);
-  log(`🕐 Delay between profiles: ${WEEKLY_CONFIG.delayBetweenProfiles / 1000}s`);
-  log('');
+  log(
+    `⏱️  Estimated duration: ~${Math.ceil((profiles.length * WEEKLY_CONFIG.delayBetweenProfiles) / 60000)} minutes`,
+  );
+  log(
+    `🕐 Delay between profiles: ${WEEKLY_CONFIG.delayBetweenProfiles / 1000}s`,
+  );
+  log("");
 
-  // Get previous snapshot for comparison
   const previousSnapshot = getLatestSnapshot();
-  const previousData = new Map(
-    previousSnapshot?.professionals?.map((p: any) => [p.id, p]) || []
+  const previousData = new Map<
+    string,
+    { id: string; followers: number } & Record<string, any>
+  >(
+    (previousSnapshot?.professionals?.map((p: any) => [p.id, p]) ??
+      []) as Array<
+      [string, { id: string; followers: number } & Record<string, any>]
+    >,
   );
 
-  log(`📈 Previous snapshot: ${previousSnapshot ? previousSnapshot.date : 'None'}`);
-  log('');
+  log(
+    `📈 Previous snapshot: ${previousSnapshot ? previousSnapshot.date : "None"}`,
+  );
+  log("");
 
   // Initialize scraper with monitoring config
   const scraper = new LinkedInScraper({
@@ -111,12 +122,18 @@ async function runWeeklyMonitoring(): Promise<void> {
 
           if (Math.abs(change) >= WEEKLY_CONFIG.minChangeThreshold) {
             if (change > 0) {
-              log(`  ✅ Current: ${result.followers.toLocaleString()} (+${change.toLocaleString()} / +${changePercent}%)`);
+              log(
+                `  ✅ Current: ${result.followers.toLocaleString()} (+${change.toLocaleString()} / +${changePercent}%)`,
+              );
             } else {
-              log(`  ⚠️  Current: ${result.followers.toLocaleString()} (${change.toLocaleString()} / ${changePercent}%)`);
+              log(
+                `  ⚠️  Current: ${result.followers.toLocaleString()} (${change.toLocaleString()} / ${changePercent}%)`,
+              );
             }
           } else {
-            log(`  ✓ Current: ${result.followers.toLocaleString()} (${change >= 0 ? '+' : ''}${change})`);
+            log(
+              `  ✓ Current: ${result.followers.toLocaleString()} (${change >= 0 ? "+" : ""}${change})`,
+            );
           }
         } else {
           failureCount++;
@@ -138,14 +155,20 @@ async function runWeeklyMonitoring(): Promise<void> {
           timestamp: new Date().toISOString(),
         });
 
-        // Use previous data if available
         if (prevData && WEEKLY_CONFIG.skipOnError) {
           warn(`  ⚠️  Using previous data for ${profile.name}`);
           scrapedProfiles.push({
-            ...prevData,
+            id: profile.id,
+            name: profile.name,
+            linkedinUrl: profile.linkedinUrl,
+            followers: prevData.followers,
+            profilePicture: (prevData as any).profilePicture,
+            location: (prevData as any).location,
+            title: (prevData as any).title,
+            company: (prevData as any).company,
             scrapedAt: new Date().toISOString(),
             success: false,
-            error: 'Failed to update, using previous data',
+            error: "Failed to update, using previous data",
           });
         }
 
@@ -162,9 +185,11 @@ async function runWeeklyMonitoring(): Promise<void> {
           : 0;
         const totalDelay = delay + randomExtra;
 
-        log(`  ⏳ Waiting ${Math.ceil(totalDelay / 1000)}s before next profile...`);
-        log('');
-        await new Promise(resolve => setTimeout(resolve, totalDelay));
+        log(
+          `  ⏳ Waiting ${Math.ceil(totalDelay / 1000)}s before next profile...`,
+        );
+        log("");
+        await new Promise((resolve) => setTimeout(resolve, totalDelay));
       }
     }
   } finally {
@@ -186,41 +211,42 @@ async function runWeeklyMonitoring(): Promise<void> {
   };
 
   // Save results
-  log('');
-  log('='.repeat(70));
-  log('💾 Saving results...');
-  log('');
+  log("");
+  log("=".repeat(70));
+  log("💾 Saving results...");
+  log("");
 
   try {
     saveSnapshot(result);
 
     if (successCount > 0) {
       updateMainDataFile(result);
-      log('✅ Main data file updated');
+      log("✅ Main data file updated");
     } else {
-      logError('❌ No successful scrapes - main file not updated');
+      logError("❌ No successful scrapes - main file not updated");
     }
 
     // Generate change report
     if (WEEKLY_CONFIG.notifyOnChanges && previousSnapshot) {
       generateChangeReport(scrapedProfiles, previousData);
     }
-
   } catch (err) {
     logError(`Failed to save results: ${err}`);
   }
 
   // Print summary
-  log('');
-  log('='.repeat(70));
-  log('📊 WEEKLY MONITORING COMPLETE');
-  log('='.repeat(70));
+  log("");
+  log("=".repeat(70));
+  log("📊 WEEKLY MONITORING COMPLETE");
+  log("=".repeat(70));
   log(`Total profiles: ${result.totalProfiles}`);
-  log(`✅ Successful: ${result.successCount} (${Math.round((result.successCount / result.totalProfiles) * 100)}%)`);
+  log(
+    `✅ Successful: ${result.successCount} (${Math.round((result.successCount / result.totalProfiles) * 100)}%)`,
+  );
   log(`❌ Failed: ${result.failureCount}`);
   log(`⏱️  Duration: ${Math.round(duration / 60000)} minutes`);
   log(`📅 Next run: ${getNextRunDate()}`);
-  log('='.repeat(70));
+  log("=".repeat(70));
 
   // Exit with appropriate code
   const exitCode = failureCount === profiles.length ? 1 : 0;
@@ -232,13 +258,13 @@ async function runWeeklyMonitoring(): Promise<void> {
  */
 function generateChangeReport(
   current: ScrapedProfile[],
-  previous: Map<string, any>
+  previous: Map<string, any>,
 ): void {
-  log('');
-  log('='.repeat(70));
-  log('📈 CHANGE REPORT - Notable Changes This Week');
-  log('='.repeat(70));
-  log('');
+  log("");
+  log("=".repeat(70));
+  log("📈 CHANGE REPORT - Notable Changes This Week");
+  log("=".repeat(70));
+  log("");
 
   const changes: Array<{
     name: string;
@@ -248,14 +274,14 @@ function generateChangeReport(
     changePercent: number;
   }> = [];
 
-  current.forEach(profile => {
+  current.forEach((profile) => {
     if (!profile.success) return;
 
     const prev = previous.get(profile.id);
     if (!prev) return;
 
     const change = profile.followers - prev.followers;
-    const changePercent = ((change / prev.followers) * 100);
+    const changePercent = (change / prev.followers) * 100;
 
     if (Math.abs(change) >= WEEKLY_CONFIG.minChangeThreshold) {
       changes.push({
@@ -269,8 +295,8 @@ function generateChangeReport(
   });
 
   if (changes.length === 0) {
-    log('No significant changes this week (threshold: ±100 followers)');
-    log('');
+    log("No significant changes this week (threshold: ±100 followers)");
+    log("");
     return;
   }
 
@@ -278,16 +304,18 @@ function generateChangeReport(
   changes.sort((a, b) => Math.abs(b.change) - Math.abs(a.change));
 
   changes.forEach((c, index) => {
-    const emoji = c.change > 0 ? '📈' : '📉';
-    const sign = c.change > 0 ? '+' : '';
+    const emoji = c.change > 0 ? "📈" : "📉";
+    const sign = c.change > 0 ? "+" : "";
 
     log(`${index + 1}. ${emoji} ${c.name}`);
     log(`   ${c.previous.toLocaleString()} → ${c.current.toLocaleString()}`);
-    log(`   ${sign}${c.change.toLocaleString()} (${sign}${c.changePercent.toFixed(2)}%)`);
-    log('');
+    log(
+      `   ${sign}${c.change.toLocaleString()} (${sign}${c.changePercent.toFixed(2)}%)`,
+    );
+    log("");
   });
 
-  log('='.repeat(70));
+  log("=".repeat(70));
 }
 
 /**
@@ -296,16 +324,16 @@ function generateChangeReport(
 function getNextRunDate(): string {
   const next = new Date();
   next.setDate(next.getDate() + 7); // Next week
-  return next.toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  return next.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 }
 
 // Run monitoring
-runWeeklyMonitoring().catch(err => {
+runWeeklyMonitoring().catch((err) => {
   logError(`Fatal error: ${err}`);
   process.exit(1);
 });
