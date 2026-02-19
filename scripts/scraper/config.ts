@@ -30,70 +30,70 @@ export interface ProfileConfig {
  */
 export const PROFILES_TO_MONITOR: ProfileConfig[] = [
   {
-    id: '1',
-    name: 'Angie Jones',
-    linkedinUsername: 'angiejones',
-    linkedinUrl: 'https://www.linkedin.com/in/angiejones/',
+    id: "1",
+    name: "Angie Jones",
+    linkedinUsername: "angiejones",
+    linkedinUrl: "https://www.linkedin.com/in/angiejones/",
     location: {
-      country: 'United States',
-      countryCode: 'US',
+      country: "United States",
+      countryCode: "US",
     },
-    title: 'VP of Developer Relations',
-    company: 'TBD',
+    title: "VP of Developer Relations",
+    company: "TBD",
     enabled: true,
   },
   {
-    id: '2',
-    name: 'Bas Dijkstra',
-    linkedinUsername: 'basdijkstra',
-    linkedinUrl: 'https://www.linkedin.com/in/basdijkstra/',
+    id: "2",
+    name: "Bas Dijkstra",
+    linkedinUsername: "basdijkstra",
+    linkedinUrl: "https://www.linkedin.com/in/basdijkstra/",
     location: {
-      country: 'Netherlands',
-      countryCode: 'NL',
+      country: "Netherlands",
+      countryCode: "NL",
     },
-    title: 'Test Automation Consultant',
-    company: 'Self-employed',
+    title: "Test Automation Consultant",
+    company: "Self-employed",
     enabled: true,
   },
   {
-    id: '3',
-    name: 'Júlio de Lima',
-    linkedinUsername: 'juliodelimaqa',
-    linkedinUrl: 'https://www.linkedin.com/in/juliodelimaqa/',
+    id: "3",
+    name: "Júlio de Lima",
+    linkedinUsername: "juliodelimaqa",
+    linkedinUrl: "https://www.linkedin.com/in/juliodelimaqa/",
     location: {
-      country: 'Brazil',
-      countryCode: 'BR',
-      state: 'São Paulo',
-      stateCode: 'SP',
+      country: "Brazil",
+      countryCode: "BR",
+      state: "São Paulo",
+      stateCode: "SP",
     },
-    title: 'QA Consultant',
-    company: 'Iterasys',
+    title: "QA Consultant",
+    company: "Iterasys",
     enabled: true,
   },
   {
-    id: '4',
-    name: 'Nikolay Advolodkin',
-    linkedinUsername: 'nikolayadvolodkin',
-    linkedinUrl: 'https://www.linkedin.com/in/nikolayadvolodkin/',
+    id: "4",
+    name: "Nikolay Advolodkin",
+    linkedinUsername: "nikolayadvolodkin",
+    linkedinUrl: "https://www.linkedin.com/in/nikolayadvolodkin/",
     location: {
-      country: 'United States',
-      countryCode: 'US',
+      country: "United States",
+      countryCode: "US",
     },
-    title: 'Founder & CEO',
-    company: 'Ultimate QA',
+    title: "Founder & CEO",
+    company: "Ultimate QA",
     enabled: true,
   },
   {
-    id: '5',
-    name: 'Joe Colantonio',
-    linkedinUsername: 'joecolantonio',
-    linkedinUrl: 'https://www.linkedin.com/in/joecolantonio/',
+    id: "5",
+    name: "Joe Colantonio",
+    linkedinUsername: "joecolantonio",
+    linkedinUrl: "https://www.linkedin.com/in/joecolantonio/",
     location: {
-      country: 'United States',
-      countryCode: 'US',
+      country: "United States",
+      countryCode: "US",
     },
-    title: 'Test Automation & Performance Testing Expert',
-    company: 'Test Guild',
+    title: "Test Automation & Performance Testing Expert",
+    company: "Test Guild",
     enabled: true,
   },
 ];
@@ -115,23 +115,16 @@ export const SCRAPER_CONFIG = {
   retryDelay: 10000, // 10 seconds
 
   // User agent (appears more human)
-  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+  userAgent:
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
 
   // Screenshot on error (for debugging)
   screenshotOnError: true,
-  screenshotPath: './logs/screenshots',
+  screenshotPath: "./logs/screenshots",
 };
 
-/**
- * Schedule configuration (cron format)
- * Examples:
- * - '0 0 * * *' = Every day at midnight
- * - '0 0 * * 0' = Every Sunday at midnight
- * - '0 0 1 * *' = First day of every month at midnight
- * - '0 */6 * * *' = Every 6 hours
- */
 export const SCHEDULE_CONFIG = {
   enabled: false, // Set to true to enable scheduled scraping
-  cronExpression: '0 0 * * 0', // Every Sunday at midnight
-  timezone: 'America/Sao_Paulo', // Your timezone
+  cronExpression: "0 0 * * 0", // Every Sunday at midnight
+  timezone: "America/Sao_Paulo", // Your timezone
 };
