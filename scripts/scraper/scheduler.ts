@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-import cron from 'node-cron';
-import { SCHEDULE_CONFIG } from './config';
-import { log, error as logError } from './logger';
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import cron from "node-cron";
+import { SCHEDULE_CONFIG } from "./config";
+import { log, error as logError } from "./logger";
+import { exec } from "child_process";
+import { promisify } from "util";
 
 const execAsync = promisify(exec);
 
@@ -12,12 +12,12 @@ const execAsync = promisify(exec);
  * Run scraper via npm script
  */
 async function runScraperTask(): Promise<void> {
-  log('\n' + '='.repeat(60));
-  log('Scheduled scraping task started');
-  log('='.repeat(60));
+  log("\n" + "=".repeat(60));
+  log("Scheduled scraping task started");
+  log("=".repeat(60));
 
   try {
-    const { stdout, stderr } = await execAsync('npm run scrape');
+    const { stdout, stderr } = await execAsync("npm run scrape");
 
     if (stdout) {
       console.log(stdout);
@@ -27,7 +27,7 @@ async function runScraperTask(): Promise<void> {
       console.error(stderr);
     }
 
-    log('Scheduled scraping task completed successfully');
+    log("Scheduled scraping task completed successfully");
   } catch (err) {
     const error = err as any;
     logError(`Scheduled scraping task failed: ${error.message}`);
@@ -47,26 +47,30 @@ async function runScraperTask(): Promise<void> {
  */
 function startScheduler(): void {
   if (!SCHEDULE_CONFIG.enabled) {
-    console.log('\n' + '='.repeat(60));
-    console.log('⚠ Scheduler is DISABLED in config');
-    console.log('='.repeat(60));
-    console.log('To enable scheduled scraping:');
-    console.log('1. Edit scripts/scraper/config.ts');
-    console.log('2. Set SCHEDULE_CONFIG.enabled = true');
-    console.log('3. Configure cronExpression (current: ' + SCHEDULE_CONFIG.cronExpression + ')');
-    console.log('4. Run: npm run scrape:schedule');
-    console.log('='.repeat(60) + '\n');
+    console.log("\n" + "=".repeat(60));
+    console.log("⚠ Scheduler is DISABLED in config");
+    console.log("=".repeat(60));
+    console.log("To enable scheduled scraping:");
+    console.log("1. Edit scripts/scraper/config.ts");
+    console.log("2. Set SCHEDULE_CONFIG.enabled = true");
+    console.log(
+      "3. Configure cronExpression (current: " +
+        SCHEDULE_CONFIG.cronExpression +
+        ")",
+    );
+    console.log("4. Run: npm run scrape:schedule");
+    console.log("=".repeat(60) + "\n");
     process.exit(0);
   }
 
-  log('='.repeat(60));
-  log('LinkedIn Scraper Scheduler');
-  log('='.repeat(60));
+  log("=".repeat(60));
+  log("LinkedIn Scraper Scheduler");
+  log("=".repeat(60));
   log(`Schedule: ${SCHEDULE_CONFIG.cronExpression}`);
   log(`Timezone: ${SCHEDULE_CONFIG.timezone}`);
-  log('Scheduler is now running...');
-  log('Press Ctrl+C to stop');
-  log('='.repeat(60) + '\n');
+  log("Scheduler is now running...");
+  log("Press Ctrl+C to stop");
+  log("=".repeat(60) + "\n");
 
   // Validate cron expression
   if (!cron.validate(SCHEDULE_CONFIG.cronExpression)) {
@@ -81,17 +85,16 @@ function startScheduler(): void {
       runScraperTask();
     },
     {
-      scheduled: true,
       timezone: SCHEDULE_CONFIG.timezone,
-    }
+    },
   );
 
   // Log next scheduled run
   log(`Next scheduled run: ${getNextScheduledTime()}\n`);
 
   // Keep process alive
-  process.on('SIGINT', () => {
-    log('\nStopping scheduler...');
+  process.on("SIGINT", () => {
+    log("\nStopping scheduler...");
     task.stop();
     process.exit(0);
   });
@@ -103,7 +106,7 @@ function startScheduler(): void {
 function getNextScheduledTime(): string {
   // This is a simplified version
   // In production, you'd calculate the exact next run time
-  return 'See cron expression: ' + SCHEDULE_CONFIG.cronExpression;
+  return "See cron expression: " + SCHEDULE_CONFIG.cronExpression;
 }
 
 // Start scheduler
